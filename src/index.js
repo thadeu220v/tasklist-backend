@@ -17,23 +17,30 @@ app.get('/tasks', (req, res) => {
 app.get('/tasks/:id', (req, res) => {
     const task = tasksToDo.find(tarefa => tarefa.id === parseInt(req.params.id));
     if (!task) {
-        return res.status(404).send('Infelizmente não existem tarefas cadastradas');
+        return res.status(404).send('A tarefa solicitada não existe');
     }
     res.json(task);
 });
 
 // rota de criação de task
 app.post('/tasks', (req, res) => {
-    const body = req.body;
-    if (!body.title || body.title.length < 3) {
+    let body = req.body;
+    
+    
+    if (!body.title || body.title.length <= 3) {
         return res.status(400).send('Titulo obrigatório deve ser maior que 3 caracteres');
     }
 
-    const task = {
+
+if(typeof body.status !== 'boolean') {
+    res.status(400).send('O status deve ser true ou false, do tipo boolean.')
+}
+
+    let task = {
         id: tasksCount++,
         title: body.title,
-        description: body.description || '', // Adiciona descrição padrão vazia
-        status: false
+        description: body.description || '', 
+        status: body.status
     };
 
     tasksToDo.push(task);
