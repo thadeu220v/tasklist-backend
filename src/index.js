@@ -101,7 +101,7 @@ res.status(200).json(task);
 });
 
 app.delete('/tasks/:id', (req, res) => {
-    let taskIndex = tasksToDo.findIndex(tarefa => tarefa.id === parseInt(req.params.id));
+    let taskIndex = tasksToDo.findIndex(tarefa => tarefa.id === task.id);
     if (taskIndex === -1) {
         return res.status(404).send('A tarefa não pode ser deletada porque ela não existe');
     }
