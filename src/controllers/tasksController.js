@@ -1,24 +1,27 @@
+const Joi = require('joi');
 const Task = require('../models/task');
 
 let tasksToDo = [];
 let tasksCount = 1;
+
+// Definir o esquema de validação com Joi
+const taskSchema = Joi.object({
+    title: Joi.string().min(3).required(),
+    description: Joi.string().optional(),
+    status: Joi.boolean().optional()
+});
 
 exports.getAllTasks = (req, res) => {
     res.json(tasksToDo);
 };
 
 exports.createTask = (req, res) => {
-    let body = req.body;
-
-    if (!body.title || body.title.length <= 3) {
-        return res.status(400).send('Titulo obrigatório deve ser maior que 3 caracteres');
+    const { error, value } = taskSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send(error.details[0].message);
     }
 
-    if (body.status !== undefined && typeof body.status !== 'boolean') {
-        return res.status(400).send('O status deve ser true ou false, do tipo boolean.');
-    }
-
-    let task = new Task(tasksCount++, body.title, body.description, body.status);
+    let task = new Task(tasksCount++, value.title, value.description, value.status);
     tasksToDo.push(task);
     res.status(201).json(task);
 };
@@ -37,19 +40,14 @@ exports.updateTask = (req, res) => {
         return res.status(404).send('Não encontramos esta tarefa para atualização');
     }
 
-    let body = req.body;
-
-    if (body.title && body.title.length <= 3) {
-        return res.status(400).send('Titulo obrigatório deve ser maior que 3 caracteres');
+    const { error, value } = taskSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send(error.details[0].message);
     }
 
-    if (body.status !== undefined && typeof body.status !== 'boolean') {
-        return res.status(400).send('O status deve ser true ou false, do tipo boolean.');
-    }
-
-    if (body.title) task.title = body.title;
-    if (body.description) task.description = body.description;
-    if (body.status !== undefined) task.status = body.status;
+    if (value.title) task.title = value.title;
+    if (value.description) task.description = value.description;
+    if (value.status !== undefined) task.status = value.status;
 
     res.status(200).json(task);
 };
@@ -60,19 +58,14 @@ exports.partialUpdateTask = (req, res) => {
         return res.status(404).send('Não encontramos esta tarefa para atualização');
     }
 
-    let body = req.body;
-
-    if (body.title && body.title.length <= 3) {
-        return res.status(400).send('Titulo obrigatório deve ser maior que 3 caracteres');
+    const { error, value } = taskSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send(error.details[0].message);
     }
 
-    if (body.status !== undefined && typeof body.status !== 'boolean') {
-        return res.status(400).send('O status deve ser true ou false, do tipo boolean.');
-    }
-
-    if (body.title) task.title = body.title;
-    if (body.description) task.description = body.description;
-    if (body.status !== undefined) task.status = body.status;
+    if (value.title) task.title = value.title;
+    if (value.description) task.description = value.description;
+    if (value.status !== undefined) task.status = value.status;
 
     res.status(200).json(task);
 };
