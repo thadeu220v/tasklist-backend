@@ -4,7 +4,6 @@ const Task = require('../models/task');
 let tasksToDo = [];
 let tasksCount = 1;
 
-// Definir o esquema de validação com Joi
 const taskSchema = Joi.object({
     title: Joi.string().min(3).required(),
     description: Joi.string().optional(),
