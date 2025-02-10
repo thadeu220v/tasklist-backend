@@ -28,7 +28,7 @@ exports.createTask = (req, res) => {
 exports.getTaskById = (req, res) => {
     let task = tasksToDo.find(tarefa => tarefa.id === parseInt(req.params.id));
     if (!task) {
-        return res.status(404).send('A tarefa solicitada não existe');
+        return res.status(404).json({ erro: 'A tarefa solicitada não existe', code: 404 });
     }
     res.json(task);
 };
@@ -36,12 +36,12 @@ exports.getTaskById = (req, res) => {
 exports.updateTask = (req, res) => {
     let task = tasksToDo.find(tarefa => tarefa.id === parseInt(req.params.id));
     if (!task) {
-        return res.status(404).send('Não encontramos esta tarefa para atualização');
+        return res.status(404).json({ error: 'Não encontramos esta tarefa para atualização', code: 404 });
     }
 
     const { error, value } = taskSchema.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message, code: 400 });
     }
 
     if (value.title) task.title = value.title;
@@ -52,14 +52,14 @@ exports.updateTask = (req, res) => {
 };
 
 exports.partialUpdateTask = (req, res) => {
-    let task = tasksToDo.find(tarefa => tarefa.id === parseInt(req.params.id));
-    if (!task) {
-        return res.status(404).send('Não encontramos esta tarefa para atualização');
-    }
-
     const { error, value } = taskSchema.validate(req.body);
     if (error) {
-        return res.status(400).send(error.details[0].message);
+        return res.status(400).json({ error: error.details[0].message, code: 400 });
+    }
+
+    let task = tasksToDo.find(tarefa => tarefa.id === parseInt(req.params.id));
+    if (!task) {
+        return res.status(404).json({ error: 'Não encontramos esta tarefa para atualização', code: 404 });
     }
 
     if (value.title) task.title = value.title;
@@ -72,9 +72,9 @@ exports.partialUpdateTask = (req, res) => {
 exports.deleteTask = (req, res) => {
     let taskIndex = tasksToDo.findIndex(tarefa => tarefa.id === parseInt(req.params.id));
     if (taskIndex === -1) {
-        return res.status(404).send('A tarefa não pode ser deletada porque ela não existe');
+                return res.status(404).json({ error: 'A tarefa não pode ser deletada porque ela não existe', code: 404 });
     }
 
     tasksToDo.splice(taskIndex, 1);
-    res.status(200).send('Tarefa deletada com sucesso');
+    res.status(200).json({ message: 'Tarefa deletada com sucesso', code: 200 });
 };
