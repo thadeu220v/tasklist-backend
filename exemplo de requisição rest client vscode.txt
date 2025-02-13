@@ -1,0 +1,8 @@
+post http://localhost:3000/tasks HTTP/1.1
+content-type: application/json
+
+{
+    "title":"Task exemplo",
+    "description": "Este é um exemplo de uma request feita pelo rest client no vscode",
+    "status":true
+}
