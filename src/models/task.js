@@ -1,13 +1,22 @@
-const { dataTypes } = require ('sequelize');
-const sequelize = require('..')
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('../config/bancodedados');
 
-class Task {
-    constructor(id, title, description = '', status = false) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
+const Task = sequelize.define('Task', {
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            len: [3, 255]
+        }
+    },
+    description: {
+        type: DataTypes.STRING,
+        defaultValue: ''
+    },
+    status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
-}
+});
 
 module.exports = Task;

@@ -19,6 +19,12 @@ node ./src/index.js
 
 isso inicializará o servidor na porta 3000 do seu localhost
 
+## novidade: banco de dados SQLite
+Agora, nas próximas versões, contaremos com um banco de dados feito em SQLite, que nos auxiliará a manter os dados de tarefas de forma permanente. É claro que, você poderá ainda contar com as funções de adição, alteração, leitura e apagamento de informações do banco de dados. Mas, é uma edição muito importante a se comemorar, por que ela nos garante que agora, teremos a possibilidade de armazenar dados de forma constante. com os dados de atualização e criação da tarefa embutidas no banco de dados.
+
+## próximos passos:
+em breve, iremos adicionar a capacidade de criar status diferentes para as atividades. removendo a opção de true e false, e criando códigos ou status diferentes para cada situação da atividade. Lógico, também armazenando e permitindo alteração pela API
+
 ## rotas
 get /tasks == obtem todas as tarefas criadas
 post /tasks == permite criar as tarefas, o formato do json deve ser o seguinte:
@@ -44,7 +50,7 @@ get http://localhost:3000/tasks/numerodatask
 Por exemplo:
 get http://localhost:3000/tasks/1
 Será retornado um json com a tarefa já modificada. Se ela não existir, será retornado um erro 404 com os detalhes da solicitação e sua negativa.
-Você pode conferir se a atualização ocorreu usando o seguinte comnado http
+Você pode conferir se a atualização ocorreu usando o seguinte comando http
 get http://localhost:3000/tasks
 assim será exibido todas as tarefas, e com isso, será possível conferir todos os demais objetos do json.
 
