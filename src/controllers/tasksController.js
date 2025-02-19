@@ -5,14 +5,13 @@ const taskSchema = Joi.object({
     title: Joi.string().min(3).required(),
     description: Joi.string().optional(),
     status: Joi.boolean().optional()
-});
+}).unknown(false);
 
 const partialTaskSchema = Joi.object({
     title: Joi.string().min(3).optional(),
     description: Joi.string().optional(),
     status: Joi.boolean().optional()
-});
-
+}).unknown(false);
 
 exports.getAllTasks = async (req, res) => {
     try {
@@ -75,16 +74,22 @@ exports.updateTask = async (req, res) => {
 };
 
 exports.partialUpdateTask = async (req, res) => {
-    const { error, value } = partialTaskSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message, code: 400 });
-    }
-
     try {
         const task = await Task.findByPk(req.params.id);
         if (!task) {
             return res.status(404).json({ error: 'Não encontramos esta tarefa para atualização', code: 404 });
         }
+
+
+        const updatedData = { ...task.toJSON(), ...req.body };
+        delete updatedData.id;
+        delete updatedData.createdAt;
+        delete updatedData.updatedAt;
+        const { error, value } = taskSchema.validate(updatedData);
+        if (error) {
+            return res.status(400).json({ error: error.details[0].message, code: 400 });
+        }
+
         await task.update(value);
         res.status(200).json(task);
     } catch (err) {
