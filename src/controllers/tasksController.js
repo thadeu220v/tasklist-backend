@@ -7,6 +7,13 @@ const taskSchema = Joi.object({
     status: Joi.boolean().optional()
 });
 
+const partialTaskSchema = Joi.object({
+    title: Joi.string().min(3).optional(),
+    description: Joi.string().optional(),
+    status: Joi.boolean().optional()
+});
+
+
 exports.getAllTasks = async (req, res) => {
     try {
         let { page = 1, limit = 10 } = req.query;
@@ -68,7 +75,7 @@ exports.updateTask = async (req, res) => {
 };
 
 exports.partialUpdateTask = async (req, res) => {
-    const { error, value } = taskSchema.validate(req.body);
+    const { error, value } = partialTaskSchema.validate(req.body);
     if (error) {
         return res.status(400).json({ error: error.details[0].message, code: 400 });
     }
